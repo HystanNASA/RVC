@@ -2,6 +2,13 @@
 
 RVC is a version control
 
+### Dependecies
+
+> * OpenSS
+> * ZLIB
+
+The source code of these libraries can be downloaded into `third_party/`
+
 ### Implementation
 
 File structure:

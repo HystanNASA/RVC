@@ -30,9 +30,6 @@ int createFileStructure()
 static int initHead(FILE* file)
 {
     const char init_branch_name[] = "master";
-    size_t bytes_written = 0;
-
-    bytes_written = fwrite(init_branch_name, sizeof(char), sizeof(init_branch_name), file);
-
+    fwrite(init_branch_name, sizeof(char), sizeof(init_branch_name), file);
     return errno;
 }

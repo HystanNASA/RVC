@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "init.h"
+#include "add.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,12 +13,17 @@ int main(int argc, char *argv[])
     }
 
     if (strcmp(argv[1], "init") == 0 && argc == 2) {
-        if (createFileStructure() != 0)
-            printf("%s\n",strerror(errno));
+        createFileStructure();
+    } else if (strcmp(argv[1], "add") == 0) {
+        addFilesToStagingArea(argv + 2, argc - 2);
     } else {
         errno = EINVAL;
-        printf("%s\n", strerror(errno));
     }
+
+    if (errno != 0) {
+        fprintf(stderr, "%s\n", strerror(errno));
+    }
+
 
     return 0;
 }
