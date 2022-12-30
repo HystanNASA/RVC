@@ -10,17 +10,23 @@ static size_t getSizeOfFile(FILE*);
 static void makeHash(char*, size_t, unsigned char*);
 static void realHexToStrHex(unsigned char*, unsigned char*, int);
 static void createBlob(char*, unsigned char*, char*);
-static void addToStage(unsigned char*);
+static void addToStage(unsigned char*, int);
 
 int addFilesToStagingArea(char** files, int number_of_files)
 {
+    if (number_of_files < 1) {
+        errno = EINVAL;
+        return errno;
+    }
+    
+    unsigned char* stagingData = malloc(number_of_files * HASH_SIZE);
+
     for (size_t i = 0; i < number_of_files && errno == 0; i++)
     {
         unsigned char hash[HASH_SIZE];
         FILE* file = fopen(files[i], "rb");
         size_t size_of_file = 0;
         size_t bytes_read = 0;
-        struct stat file_stat;
         char* data = NULL;
 
         hash[SHA256_DIGEST_LENGTH] = '\0';
@@ -36,14 +42,18 @@ int addFilesToStagingArea(char** files, int number_of_files)
         if (bytes_read != size_of_file || data == NULL)
             return errno;
 
-        stat(files[i], &file_stat);
         makeHash(data, size_of_file, hash);
         createBlob(files[i], hash, data);
-        addToStage(hash);
+        strncpy((char*)(stagingData + (i * HASH_SIZE)), (const char*)hash, HASH_SIZE);
 
         fclose(file);
         free(data);
     }
+
+    if (!errno)
+        addToStage(stagingData, number_of_files);
+
+    free(stagingData);
 
     return errno;
 }
@@ -122,16 +132,12 @@ static void createBlob(char* filename, unsigned char* hash, char* data)
     fclose(file);
 }
 
-// TODO: if the filename inside a blob is 
-// the same as the current one, then don't add it
-static void addToStage(unsigned char* hash)
+static void addToStage(unsigned char* hash_filenames, int number_of_hashes)
 {
     const char* stage_filename = "stage";
     char* filename = NULL;
-    char* buffer = NULL;
     FILE* file = NULL;
     int filename_size;
-    size_t read = 0;
 
     filename_size = sizeof(char) * (strlen(stage_filename) + strlen(ROOT_DIR));
     filename = malloc(filename_size + 1);
@@ -139,17 +145,12 @@ static void addToStage(unsigned char* hash)
     memcpy(filename, ROOT_DIR, strlen(ROOT_DIR));
     memcpy(filename + strlen(ROOT_DIR), stage_filename, strlen(stage_filename));
 
-    file = fopen(filename, "a+");
+    file = fopen(filename, "w");
 
-    while ((read = getline(&buffer, &read, file)) != -1) {
-        if (strcmp(buffer, (const char*)hash) == 0) {
-            free(filename);
-            fclose(file);
-            return;
-        }
-    }
+    if (file == NULL)
+        return;
 
-    fwrite(hash, sizeof(char), HASH_SIZE, file);
+    fwrite(hash_filenames, HASH_SIZE, number_of_hashes, file);
 
     free(filename);
     fclose(file);
