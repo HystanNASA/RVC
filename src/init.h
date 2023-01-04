@@ -3,7 +3,8 @@
 
 #include <stdio.h>
 #include <sys/stat.h>
-#include <errno.h>
+
+#include "error_handling.h"
 
 int createFileStructure();
 

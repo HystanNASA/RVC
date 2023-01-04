@@ -16,6 +16,7 @@ int addFilesToStagingArea(char** files, int number_of_files)
 {
     if (number_of_files < 1) {
         errno = EINVAL;
+        addError("nothing to add");
         return errno;
     }
     

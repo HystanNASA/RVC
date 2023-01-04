@@ -22,7 +22,8 @@ endif ()
 set(SOURCE_FILES 
                 src/main.c
                 src/init.h src/init.c
-                src/add.h src/add.c)
+                src/add.h src/add.c
+                src/error_handling.h src/error_handling.c)
 
 find_package(OpenSSL REQUIRED)
 find_package(ZLIB REQUIRED)
