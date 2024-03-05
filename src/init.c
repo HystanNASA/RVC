@@ -6,22 +6,22 @@ int createFileStructure()
 {   
     FILE* head, *branches;
 
-    if(mkdir(".rvc", 0777) != 0)
+    if(mkdir(ROOT_DIR, 0777) != 0)
         return errno;
 
-    if(mkdir(".rvc/objects", 0777) != 0)
+    if(mkdir(OBJECTS_DIR, 0777) != 0)
         return errno;
 
-    head = fopen(".rvc/HEAD", "w");
+    head = fopen(HEAD_FILE, "w");
     if (head == NULL)
         return errno;
     initHead(head);
     fclose(head);
 
-    if (fclose(fopen(".rvc/stage", "w")) != 0)
+    if (fclose(fopen(STAGE_FILE, "w")) != 0)
         return errno;
 
-    if (fclose(fopen(".rvc/branches", "w")) != 0)
+    if (fclose(fopen(BRANCHES_FILE, "w")) != 0)
         return errno;
 
     return errno;

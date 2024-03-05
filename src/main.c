@@ -2,16 +2,20 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "paths.h"
 #include "init.h"
 #include "add.h"
+#include "commit.h"
 #include "error_handling.h"
 
-void run(int argc, char* argv[])
+void parseCommand(int argc, char* argv[])
 {
     if (strcmp(argv[1], "init") == 0 && argc == 2) {
         createFileStructure();
     } else if (strcmp(argv[1], "add") == 0) {
         addFilesToStagingArea(argv + 2, argc - 2);
+    } else if (strcmp(argv[1], "commit") == 0) {
+        commit(argv + 2, argc - 2);
     } else {
         errno = EINVAL;
         addError("unknown command");
@@ -24,7 +28,7 @@ int main(int argc, char* argv[])
         errno = EINVAL;
         addError("no command is specified");
     } else {
-        run(argc, argv);
+        parseCommand(argc, argv);
     }
 
     if (errno != 0) {

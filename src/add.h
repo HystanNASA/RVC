@@ -9,7 +9,9 @@
 #include <openssl/sha.h>
 #include <zlib.h>
 
+#include "paths.h"
 #include "error_handling.h"
+#include "utils.h"
 
 int addFilesToStagingArea(char**, int);
 
