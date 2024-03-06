@@ -13,13 +13,13 @@ The source code of these libraries can be downloaded into `third_party/`
 
 **File structure:**
 * .rvc/
-   * HEAD
-   * stage
-   * branches
-   * objects/
-        * object_hash...
-        * object_hash...
-        * object_hash...
+	* HEAD
+	* stage
+	* branches
+	* objects/
+		* object_hash...
+		* object_hash...
+		* object_hash...
 
 **Structure explanation:**
 * HEAD: current commit or branch name
