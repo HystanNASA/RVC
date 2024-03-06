@@ -38,3 +38,7 @@ The source code of these libraries can be downloaded into `third_party/`
 * commit: craetes a commit out of the stage file
 * status: prints info about the current project status
 * gc: deletes unnecessary objects
+
+# License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
