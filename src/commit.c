@@ -18,9 +18,10 @@ int commit(char** files, int number_of_files)
 	if (!data) {
 		addError("nothing to commit");
 		errno = EINVAL;
+	} else {
+		free(data);
 	}
 
-	free(data);
 	return errno;
 }
 

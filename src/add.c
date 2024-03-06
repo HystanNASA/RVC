@@ -26,16 +26,21 @@ int addFilesToStagingArea(char** files, int number_of_files)
 
 		hash[SHA256_DIGEST_LENGTH] = '\0';
 
-		if (file == NULL)
+		if (file == NULL) {
+			free(stagingData);
 			return errno;
+		}
 
 		size_of_file = getSizeOfFile(file);
 		data = malloc(sizeof(*data) * size_of_file + 1);
 		data[size_of_file] = '\0';
 		bytes_read = fread(data, sizeof(*data), size_of_file, file);
 
-		if (bytes_read != size_of_file || data == NULL)
+		if (bytes_read != size_of_file || data == NULL) {
+			free(data);
+			free(stagingData);
 			return errno;
+		}
 
 		makeHash(data, size_of_file, hash);
 		createBlob(files[i], hash, data);
@@ -61,13 +66,16 @@ static void createBlob(char* filename, unsigned char* hash, char* data)
 	z_stream strm;
 
 	new_filename = malloc(sizeof(char) * (HASH_SIZE + strlen(OBJECTS_DIR)));
+	if (new_filename == NULL) return;
 	memcpy(new_filename, OBJECTS_DIR, strlen(OBJECTS_DIR));
 	memcpy(new_filename + strlen(OBJECTS_DIR), hash, HASH_SIZE);
 
 	file = fopen(new_filename, "wb");
 
-	if (file == NULL)
+	if (file == NULL) {
+		free(new_filename);
 		return;
+	}
 
 	fwrite(filename, sizeof(char), strlen(filename), file);
 
@@ -79,20 +87,26 @@ static void createBlob(char* filename, unsigned char* hash, char* data)
 
 	int status = deflateInit2(&strm, Z_DEFAULT_COMPRESSION, Z_DEFLATED,
 							  15 | 16, 8, Z_DEFAULT_STRATEGY);
-	if (status < 0)
+	if (status < 0) {
+		free(new_filename);
+		fclose(file);
 		return;
+	}
 
 	do {
 		int have;
 		strm.avail_out = CHUNK;
 		strm.next_out = out;
 
-		int status = deflate (& strm, Z_FINISH);
-		if (status < 0)
+		int status = deflate(&strm, Z_FINISH);
+		if (status < 0) {
+			free(new_filename);
+			fclose(file);
 			return;
+		}
 
 		have = CHUNK - strm.avail_out;
-		fwrite (out, sizeof (char), have, file);
+		fwrite(out, sizeof(char), have, file);
 	} while (strm.avail_out == 0);
 
 	deflateEnd(&strm);
