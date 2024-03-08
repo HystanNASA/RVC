@@ -116,14 +116,11 @@ static void createBlob(char* filename, unsigned char* hash, char* data)
 
 static void addToStage(unsigned char* hash_filenames, int number_of_hashes)
 {
-	FILE* file = NULL;
-
-	file = fopen(STAGE_FILE, "w");
+	FILE* file = fopen(STAGE_FILE, "w");
 
 	if (file == NULL)
 		return;
 
 	fwrite(hash_filenames, HASH_SIZE, number_of_hashes, file);
-
 	fclose(file);
 }
