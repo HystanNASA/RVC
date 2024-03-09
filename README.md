@@ -4,10 +4,31 @@
 
 # Dependecies
 
+Ensure that these libraries are downloaded and accessible:
+
 > * OpenSS
 > * ZLIB
 
 The source code of these libraries can be downloaded into `third_party/`
+
+# Build
+
+From the root directory execute:
+
+```
+cmake -B build/
+make -C build/
+```
+
+The executable will be generated in `bin/`
+
+# Usage
+
+```
+rvc init
+rvc add CMakeFile.txt README.md
+rvc commit
+```
 
 # Implementation
 
@@ -22,10 +43,11 @@ The source code of these libraries can be downloaded into `third_party/`
 		* object_hash...
 
 **Structure explanation:**
-* HEAD: current commit or branch name
-* stage: like a tree but it's temporary
-* branches: stores hashes and its branches line by line
-* objects/: stores all objects
+* `.rvc/`: the root directory for `RVC` in the working directory
+* `HEAD`: contains the current commit or branch name
+* `stage`: contains the blob names that are generated from the provided with `rvc add`
+* `branches`: stores branch names and their last hashes
+* `objects/`: stores all blob and tree objects
 
 **Objects:**
 * blob: stores compressed data and path
@@ -34,10 +56,10 @@ The source code of these libraries can be downloaded into `third_party/`
 
 **Commands:**
 * init: creates file structure
-* add: craetes blobs out of added files and add it to the stage file
-* commit: craetes a commit out of the stage file
-* status: prints info about the current project status
-* gc: deletes unnecessary objects
+* add: craetes blobs out of added files and add it to the stage file</br>
+* *commit: craetes a commit out of the stage file (coming soon)*
+* *status: prints info about the current project status (coming soon)*
+* *gc: deletes unnecessary objects (coming soon)*
 
 # Diagram
 
