@@ -19,17 +19,18 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
 endif ()
 
-set(SOURCE_FILES 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
+
+file(GLOB RVC_SOURCES
 	src/main.c
-	src/paths.h
-	src/init.h src/init.c
-	src/add.h src/add.c
-	src/commit.h src/commit.c
-	src/error_handling.h src/error_handling.c
-	src/utils.h src/utils.c)
+	src/init.c
+	src/add.c
+	src/commit.c
+	src/error_handling.c
+	src/utils.c)
 
 find_package(OpenSSL REQUIRED)
 find_package(ZLIB REQUIRED)
 
-add_executable(rvc ${SOURCE_FILES})
+add_executable(rvc ${RVC_SOURCES})
 target_link_libraries(rvc OpenSSL::SSL ZLIB::ZLIB)
