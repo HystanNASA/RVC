@@ -77,6 +77,7 @@ static void createBlob(char* filename, unsigned char* hash, char* data)
 		return;
 	}
 
+	// '\0' insdie filename divides filename and compressed data
 	fwrite(filename, sizeof(char), strlen(filename), file);
 
 	strm.zalloc = Z_NULL;

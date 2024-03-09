@@ -34,8 +34,11 @@ static char* readStageFile()
 	file = fopen(STAGE_FILE, "r");
 
 	if (!file) {
+		// The file is expected to always exist, so if it has not been created,
+		//	then create it now but return with an error since there is no stage info to process
 		file = fopen(STAGE_FILE, "w");
 		fclose(file);
+		errno = ENOENT;
 		return NULL;
 	}
 
