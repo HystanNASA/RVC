@@ -23,7 +23,7 @@ The source code of these libraries can be downloaded into `third_party/`
 
 **Structure explanation:**
 * HEAD: current commit or branch name
-* state: like a tree but it's temporary
+* stage: like a tree but it's temporary
 * branches: stores hashes and its branches line by line
 * objects/: stores all objects
 
