@@ -1,8 +1,5 @@
 #include "add.h"
 
-#define CHUNK 0x4000
-#define HASH_SIZE (SHA256_DIGEST_LENGTH + 1)
-
 static void createBlob(char*, unsigned char*, char*);
 static void addToStage(unsigned char*, int);
 

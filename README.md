@@ -30,7 +30,7 @@ The source code of these libraries can be downloaded into `third_party/`
 **Objects:**
 * blob: stores compressed data and path
 * tree: stores list of blobs
-* commit: commit hash, prev commit hash, tree hash, author, email, branch, message, date: dd:mm:yy mm:hh
+* commit: commit hash, prev commit hash, tree hash, author, email, branch, message, date: dd:mm:YY hh:mm:ss
 
 **Commands:**
 * init: creates file structure
