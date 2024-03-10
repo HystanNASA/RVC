@@ -31,6 +31,9 @@ file(GLOB RVC_SOURCES
 
 find_package(OpenSSL REQUIRED)
 find_package(ZLIB REQUIRED)
+include(cmake/FetchCMocka.cmake)
+
+add_subdirectory(tests)
 
 add_executable(rvc ${RVC_SOURCES})
 target_link_libraries(rvc OpenSSL::SSL ZLIB::ZLIB)
