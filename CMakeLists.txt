@@ -37,3 +37,4 @@ add_subdirectory(tests)
 
 add_executable(rvc ${RVC_SOURCES})
 target_link_libraries(rvc OpenSSL::SSL ZLIB::ZLIB)
+target_include_directories(rvc PRIVATE ${CMAKE_HOME_DIRECTORY}/include)
