@@ -8,6 +8,13 @@
 #include "commit.h"
 #include "error_handling.h"
 
+const char* help_message =
+"usage: rvc <command> [<args>]\n"
+"Commands:\n"
+"init\tCreate an empty repository in the current directory\n"
+"add\tAdd files to the staging area\n"
+"commit\tMake a commit of the staging area\n";
+
 void parseCommand(int argc, char* argv[])
 {
 	if (strcmp(argv[1], "init") == 0 && argc == 2) {
@@ -16,6 +23,8 @@ void parseCommand(int argc, char* argv[])
 		addFilesToStagingArea(argv + 2, argc - 2);
 	} else if (strcmp(argv[1], "commit") == 0) {
 		commit(argv + 2, argc - 2);
+	} else if (strcmp(argv[1], "--help") == 0) {
+		printf("%s", help_message);
 	} else {
 		errno = EINVAL;
 		addError("unknown command");
