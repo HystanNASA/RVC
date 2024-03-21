@@ -56,7 +56,7 @@ rvc commit
 
 **Commands:**
 * init: creates file structure
-* add: craetes blobs out of added files and add it to the stage file</br>
+* add: craetes blobs out of added files and add it to the stage file
 * *commit: craetes a commit out of the stage file (coming soon)*
 * *switch: switch to another branch (coming soon)*
 * *status: prints info about the current project status (coming soon)*
