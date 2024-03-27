@@ -13,9 +13,9 @@
 
 struct metadata
 {
-	char* commit_hash;
+	unsigned char commit_hash[HASH_SIZE];
 	char* prev_commit_hash;
-	char* tree_hash;
+	unsigned char* tree_hash;
 	char* author;
 	char* email;
 	char* branch_name;

@@ -42,22 +42,27 @@ rvc commit
 		* object_hash...
 		* object_hash...
 
-**Structure explanation:**
+**File structure explanation:**
 * `.rvc/`: the root directory for `RVC` in the working directory
 * `HEAD`: contains the current commit or branch name
 * `stage`: contains the blob names that are generated from the provided with `rvc add`
 * `branches`: stores branch names and their last hashes
+	- File format: `branch_name1\0commit_hash1\0branch_name2\0commit_hash2\0`
+	- When there is no commits the first commit hash is just 32 `0`s
 * `objects/`: stores all blob and tree objects
+
+Objects inside the `objects/` directory are files that serve different purposes.
 
 **Objects:**
 * blob: stores compressed data and path
 * tree: stores list of blobs
 * commit: commit hash, prev commit hash, tree hash, author, email, branch, message, date: dd:mm:YY hh:mm:ss
+	- commit hash is a mixture of all information listed above
 
 **Commands:**
 * init: creates file structure
 * add: craetes blobs out of added files and add it to the stage file
-* *commit: craetes a commit out of the stage file (coming soon)*
+* commit: craetes a commit out of the stage file
 * *switch: switch to another branch (coming soon)*
 * *status: prints info about the current project status (coming soon)*
 * *gc: deletes unnecessary objects (coming soon)*

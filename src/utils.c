@@ -63,15 +63,17 @@ char* getLastBranchCommitHash(const char* const branch_name)
 	}
 
 	// Finds the last commit hash of the branch.
-	//  The branch file content follows the format: branch_name1\0commit_hash1\0branch_name2\0commit_hash2\0...
+	// 	Checkout the format in the branches file initialization
 	for (size_t i = 0, terminator_counter = 0, branch_iter = 0, commit_iter = 0; i < filesize; i++) {
-		if (file_buffer[i] == '\0') {
-			terminator_counter++;
-		} else if (terminator_counter == 0) {
+		if (terminator_counter == 0) {
 			branch[branch_iter++] = file_buffer[i];
 		} else if (terminator_counter == 1) {
 			commit_hash[commit_iter++] = file_buffer[i];
-		} else if (terminator_counter == 2) {
+		}
+		if (file_buffer[i] == '\0') {
+			terminator_counter++;
+		}
+		if (terminator_counter == 2) {
 			// Return the assosiated commit hash when the name is found
 			if (strcmp(branch_name, branch) == 0) return commit_hash;
 			terminator_counter = commit_iter = branch_iter = 0;

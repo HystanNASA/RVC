@@ -2,7 +2,6 @@
 
 static char* readStageFile(size_t*);
 static void makeTree(char*, size_t, unsigned char*);
-static struct metadata makeMetadata();
 static void createCommit(unsigned char*);
 static int validHash(unsigned char*);
 static void clearStageFile();
@@ -80,33 +79,64 @@ static void makeTree(char* data, size_t data_size, unsigned char* tree_hash)
 	free(new_filename);
 }
 
-static struct metadata makeMetadata()
-{
-	time_t nowtime;
-	struct metadata metadata;
-
-	time(&nowtime);
-	strftime(metadata.date_and_time, 20, "%d/%m/%Y %H:%M:%S", localtime(&nowtime));
-
-	metadata.prev_commit_hash = getHeadCommmitHash();
-	metadata.commit_hash = NULL;
-	metadata.tree_hash = NULL;
-	metadata.author = NULL;
-	metadata.email = NULL;
-	metadata.branch_name = NULL;
-	metadata.message = NULL;
-
-	return metadata;
-}
-
 static void createCommit(unsigned char* tree_hash)
 {
+	time_t nowtime;
+	char* data = NULL, *filename = NULL;
 	struct metadata metadata;
+	FILE* commit_file = NULL;
 
 	if (!validHash(tree_hash))
 		return;
 
-	metadata = makeMetadata();
+	time(&nowtime);
+	strftime(metadata.date_and_time, 20, "%d/%m/%Y %H:%M:%S", localtime(&nowtime));
+
+	// Initialize metadata
+	memset(metadata.commit_hash, 0, HASH_SIZE);
+	metadata.prev_commit_hash = getHeadCommmitHash();
+	metadata.tree_hash = tree_hash;
+	metadata.author = "";
+	metadata.email = "";
+	metadata.branch_name = getHeadBranchName();
+	metadata.message = "";
+
+	// Lengths plus their null characters
+	size_t prev_commit_hash_len = strlen(metadata.prev_commit_hash) + 1;
+	size_t tree_hash_len = strlen((char*)metadata.tree_hash) + 1;
+	size_t author_len = strlen(metadata.author) + 1;
+	size_t email_len = strlen(metadata.email) + 1;
+	size_t branch_name_len = strlen(metadata.branch_name) + 1;
+	size_t message_len = strlen(metadata.message) + 1;
+	size_t metadata_len = prev_commit_hash_len + tree_hash_len + author_len + email_len + branch_name_len + message_len;
+	size_t pointer = 0;
+
+	data = malloc(metadata_len);
+	if (data == NULL)
+		return;
+
+	memcpy(data, metadata.prev_commit_hash, prev_commit_hash_len);
+	memcpy(data + (pointer += prev_commit_hash_len), metadata.tree_hash, tree_hash_len);
+	memcpy(data + (pointer += tree_hash_len), metadata.author, author_len);
+	memcpy(data + (pointer += author_len), metadata.email, email_len);
+	memcpy(data + (pointer += email_len), metadata.branch_name, branch_name_len);
+	memcpy(data + (pointer += branch_name_len), metadata.message, message_len);
+
+	makeHash(data, metadata_len, metadata.commit_hash);
+
+	filename = concatFileAndDirNames(metadata.commit_hash, HASH_SIZE, OBJECTS_DIR, strlen(OBJECTS_DIR));
+	if (filename == NULL)
+		return;
+
+	commit_file = fopen(filename, "w");
+	if (commit_file == NULL)
+		return;
+
+	fwrite(data, metadata_len, 1, commit_file);
+
+	free(filename);
+	fclose(commit_file);
+
 	clearMetadata(&metadata);
 }
 
@@ -118,12 +148,7 @@ static void clearStageFile()
 
 static void clearMetadata(struct metadata* metadata)
 {
-	free(metadata->commit_hash);
-	free(metadata->tree_hash);
-	free(metadata->author);
-	free(metadata->email);
 	free(metadata->branch_name);
-	free(metadata->message);
 }
 
 static int validHash(unsigned char* hash)
