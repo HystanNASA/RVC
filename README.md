@@ -1,6 +1,6 @@
 # Introduction
 
-**RVC** is a version control
+**RVC** is a version control system.
 
 # Dependecies
 
