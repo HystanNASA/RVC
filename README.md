@@ -66,6 +66,7 @@ Objects inside the `objects/` directory are files that serve different purposes.
 * *switch: switch to another branch (coming soon)*
 * *status: prints info about the current project status (coming soon)*
 * *gc: deletes unnecessary objects (coming soon)*
+* *log: prints out the history of changes (coming soon)*
 
 # Diagram
 
